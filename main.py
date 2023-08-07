@@ -103,8 +103,11 @@ class Parser:
     else:
       rhs_relation = self.token()
 
+  
+    
     if lhs == "multiply":
       lhs_times = int(self.parsed[0]["instances"])
+      
     else:
       lhs_times = int(lhs)
     if rhs == "multiply":
@@ -112,12 +115,19 @@ class Parser:
     else:
       rhs_times = int(rhs)
   
-    print(lhs_times)
-    print(rhs_times)
-    
-    for i in range(0, lhs_times):
-      for j in range(0, rhs_times):
-        print("{}{} -> {}{}".format(self.parsed[0]["name"], i if lhs_times > 1 else j, self.parsed[1]["name"], j if rhs_times > 1 else i))
+    print("lhs_times", lhs_times)
+    print("rhs_times", rhs_times)
+
+    current_rhs = 0
+    for i in range(0, self.parsed[0]["instances"]):
+      
+      
+      if rhs == "multiply":
+        for j in range(0, self.parsed[1]["instances"]):
+          print("{}{} -> {}{}".format(self.parsed[0]["name"], i, self.parsed[1]["name"], j))
+      else:
+        print("{}{} -> {}{}".format(self.parsed[0]["name"], i, self.parsed[1]["name"], current_rhs))
+      current_rhs = current_rhs + 1
     
     return self.parsed
 
@@ -134,13 +144,16 @@ class Parser:
       raise ParserError("error, expected close square was {}".format(close))
     self.parsed.append({
       "name": identifier,
-      "instances": number
+      "instances": int(number)
     })
 
 def parse(item):
   print("####### {}".format(item))
+  print()
   parser = Parser(item)
   return parser.parse()
 
 for item in data:
+  print("#######")
   print(parse(item))
+  print("########")
